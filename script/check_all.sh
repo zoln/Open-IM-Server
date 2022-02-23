@@ -4,6 +4,7 @@ source ./style_info.cfg
 source ./path_info.cfg
 source ./function.sh
 service_port_name=(
+  openImCmsApiPort
   openImApiPort
   openImUserPort
   openImFriendPort
@@ -14,8 +15,18 @@ service_port_name=(
   openImPushPort
   openImWsPort
   openImSdkWsPort
+  openImDemoPort
+  openImAdminCmsPort
+  openImMessageCmsPort
+  openImStatisticsPort
 )
+switch=$(cat $config_path | grep demoswitch |awk -F '[:]' '{print $NF}')
 for i in ${service_port_name[*]}; do
+  if [ ${switch} != "true" ]; then
+    if [ ${i} == "openImDemoPort"]; then
+             continue
+    fi
+  fi
   list=$(cat $config_path | grep -w ${i} | awk -F '[:]' '{print $NF}')
   list_to_string $list
   for j in ${ports_array}; do
